@@ -1,25 +1,25 @@
 import { useState } from "react";
 
 const questions = [
-  { id: "pause45",      label: "Le trajet nécessite une pause de 45 min ou plus", points: 6,
+  { id: "pause45", label: "Le trajet nécessite une pause de 45 min ou plus", points: 6,
     precoTSR: "Toute pause doit être planifiée en amont avec le client. Le lieu de stationnement doit être sélectionné selon les critères TAPA PSR (parking sécurisé certifié ou équivalent). Éviter les aires d'autoroute non sécurisées." },
-  { id: "decouche",     label: "Le trajet nécessite un découchage", points: 9,
+  { id: "decouche", label: "Le trajet nécessite un découchage", points: 9,
     precoTSR: "Le site de découchage doit être un parking certifié TAPA PSR ou présentant des mesures équivalentes (gardiennage 24h, clôture, vidéosurveillance). Valider le lieu avec le client avant départ (exigence TSR §9.5)." },
-  { id: "autoroute25",  label: "Le trajet comporte moins de 25% d'autoroute", points: 9,
+  { id: "autoroute25", label: "Le trajet comporte moins de 25% d'autoroute", points: 9,
     precoTSR: "Trajet majoritairement sur routes secondaires : privilégier un itinéraire alternatif plus sécurisé si possible. Renforcer le suivi télématique avec des points de contrôle rapprochés (toutes les 30 min, TSR §9.14)." },
-  { id: "autoroute50",  label: "Le trajet comporte moins de 50% d'autoroute", points: 6,
+  { id: "autoroute50", label: "Le trajet comporte moins de 50% d'autoroute", points: 6,
     precoTSR: "Part significative de routes secondaires : prévoir des points de contrôle intermédiaires et valider l'itinéraire avec le responsable sûreté avant départ." },
-  { id: "tis",          label: "L'outil TIS (ou info LEA locales) révèle un ou plusieurs incidents sur ce trajet", points: 9,
+  { id: "tis", label: "L'outil TIS (ou info LEA locales) révèle un ou plusieurs incidents sur ce trajet", points: 9,
     precoTSR: "Des incidents ont été recensés sur cette zone. Consulter les forces de l'ordre locales (LEA) conformément au TSR §9.3. Envisager une modification d'itinéraire ou un renforcement des mesures (escorte, convoi)." },
-  { id: "douane",       label: "Le trajet inclut un passage douanier", points: 9,
-    precoTSR: "Les temps d'attente aux douanes exposent le véhicule. Planifier le passage en concertation avec le client, activer le suivi en continu, et s'assurer que le chauffeur ne quitte pas le véhicule sans surveillance (TSR §9.32)." },
-  { id: "embouteillage",label: "Le trajet passe par une zone à embouteillages fréquents", points: 6,
+  { id: "douane", label: "Le trajet inclut un passage douanier", points: 9,
+    precoTSR: "Les temps d'attente aux douanes exposent le véhicule. Planifier le passage en concertation avec le client, activer le suivi en continu, s'assurer que le chauffeur ne quitte pas le véhicule sans surveillance (TSR §9.32)." },
+  { id: "embouteillage", label: "Le trajet passe par une zone à embouteillages fréquents", points: 6,
     precoTSR: "Les zones de congestion sont propices aux vols à l'arraché et aux intrusions. Sensibiliser le chauffeur (vitres fermées, portes verrouillées) et prévoir un itinéraire alternatif validé." },
-  { id: "ferry",        label: "Le trajet inclut un passage de ferry", points: 9,
-    precoTSR: "Le ferry constitue une rupture de traçabilité. Vérifier les mesures de sécurité à bord, ne pas laisser la marchandise sans contrôle, et s'assurer que le suivi GPS fonctionne ou prévoir un check-in manuel à l'embarquement et au débarquement (TSR §9.14)." },
-  { id: "attractif",    label: "La marchandise est attractive pour un vol", points: 9,
+  { id: "ferry", label: "Le trajet inclut un passage de ferry", points: 9,
+    precoTSR: "Le ferry constitue une rupture de traçabilité. Vérifier les mesures de sécurité à bord, ne pas laisser la marchandise sans contrôle, et prévoir un check-in manuel à l'embarquement et au débarquement (TSR §9.14)." },
+  { id: "attractif", label: "La marchandise est attractive pour un vol", points: 9,
     precoTSR: "Marchandise à haute attractivité : verrouillage certifié obligatoire (TSR §9 Locking), scellés sur la remorque, discrétion sur le contenu du chargement. Envisager un transport banalisé." },
-  { id: "tunnel",       label: "Le trajet passe par un tunnel avec risque de perte de connexion", points: 6,
+  { id: "tunnel", label: "Le trajet passe par un tunnel avec risque de perte de connexion", points: 6,
     precoTSR: "Perte de signal possible en tunnel : configurer le système télématique pour détecter toute rupture de connexion anormale et alerter automatiquement le centre de surveillance (TSR §9.14.9)." },
 ];
 
@@ -43,79 +43,58 @@ function getTSRLevel(score, valeur) {
   if (!valeur) return null;
   if (valeur.tsr1 || score >= 50) return { level: "TSR 1", color: "#7c3aed", badge: "🔒 TSR 1", desc: "Niveau de certification le plus élevé — requis pour ce trajet." };
   if (score >= 25)                return { level: "TSR 3", color: "#2563eb", badge: "🔐 TSR 3", desc: "Niveau minimum recommandé — envisager TSR 1 si la valeur augmente." };
-  return                                 { label: "Bonnes pratiques", color: "#16a34a", badge: "✔️ Bonnes pratiques", desc: "Pas de niveau TSR obligatoire — appliquer les bonnes pratiques de base." };
+  return { level: "Bonnes pratiques", color: "#16a34a", badge: "✔️ Bonnes pratiques", desc: "Pas de niveau TSR obligatoire — appliquer les bonnes pratiques de base." };
 }
 
-function renderMd(text) {
-  return text.split(/\*\*(.*?)\*\*/g).map((p, i) => i % 2 === 1 ? <strong key={i}>{p}</strong> : p);
-}
+const precoGenerales = {
+  "Bonnes pratiques": [
+    "Vérifier que le véhicule est équipé d'un système de verrouillage fonctionnel",
+    "S'assurer que le chauffeur dispose d'un contact d'urgence joignable pendant le trajet",
+    "Confirmer l'itinéraire avec le client avant le départ",
+    "Activer le suivi GPS et tester la connexion avant départ",
+  ],
+  "TSR 3": [
+    "Mettre en place un système de suivi télématique actif avec alertes automatiques (TSR §9.14)",
+    "Utiliser un système de verrouillage certifié sur la remorque (TSR §9 Locking)",
+    "Définir un protocole de check-in régulier avec le dispatcher (toutes les 2h minimum)",
+    "Former le chauffeur aux procédures de sûreté de base (TSR §9.20)",
+    "Établir une procédure d'urgence documentée et connue du chauffeur",
+    "Valider l'itinéraire avec le responsable sûreté avant départ",
+  ],
+  "TSR 1": [
+    "Exiger une certification TAPA TSR 1 du transporteur (TSR §9 complet)",
+    "Mettre en place un suivi télématique en temps réel avec centre de surveillance 24h/24 (TSR §9.14)",
+    "Utiliser des scellés numérotés et vérifiés à chaque étape (TSR §9.30)",
+    "Stationner exclusivement sur des parkings certifiés TAPA PSR (TSR §9.5)",
+    "Vérifier les antécédents du chauffeur (TSR §9.20)",
+    "Mettre en place une procédure de pré-alerte client avant départ et à l'arrivée",
+    "Prévoir une escorte ou un convoi si le risque est jugé critique",
+    "Briefing sûreté obligatoire avant chaque mission (TSR §9.3)",
+  ],
+};
 
 export default function App() {
   const [checked, setChecked] = useState({});
-  const [valeur, setValeur]   = useState(null);
-  const [step, setStep]       = useState("form");
-  const [aiResult, setAiResult] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [valeur, setValeur] = useState(null);
+  const [step, setStep] = useState("form");
 
   const toggle = id => setChecked(p => ({ ...p, [id]: !p[id] }));
-
   const rawScore = questions.reduce((s, q) => s + (checked[q.id] ? q.points : 0), 0) + (valeur?.points ?? 0);
-  const score    = Math.min(100, Math.round((rawScore / MAX_SCORE) * 100));
+  const score = Math.min(100, Math.round((rawScore / MAX_SCORE) * 100));
   const answered = Object.values(checked).filter(Boolean).length + (valeur ? 1 : 0);
-  const tsrReco  = getTSRLevel(score, valeur);
-
-  async function handleSubmit() {
-    if (!valeur) return alert("Veuillez sélectionner la valeur du transport.");
-    setStep("result");
-    setLoading(true);
-
-    const triggered = questions.filter(q => checked[q.id]);
-    const level     = getLevel(score);
-    const tsr       = getTSRLevel(score, valeur);
-    const precoDetails = triggered.map(q => `- ${q.label} → ${q.precoTSR}`).join("\n");
-
-    const prompt = `Tu es un expert en sûreté du transport de marchandises et en référentiel TAPA TSR 2023.
-Un analyste junior vient de qualifier un trajet :
-- Score : ${score}/100 — Niveau : ${level.label}
-- Valeur du transport : ${valeur.label}
-- Recommandation TAPA : ${tsr.level || tsr.label}
-
-Facteurs de risque cochés et leurs préconisations TSR associées :
-${triggered.length ? precoDetails : "- Aucun facteur de risque détecté"}
-
-Génère un rapport de sûreté structuré en 3 parties :
-1. **Synthèse** : 2-3 phrases résumant le profil de risque du trajet et le niveau TSR recommandé.
-2. **Points de vigilance & préconisations spécifiques** : pour chaque facteur de risque coché, développe la préconisation TSR associée de façon opérationnelle et concrète (ce que le junior doit faire exactement). Si aucun facteur, rappeler les bonnes pratiques de base.
-3. **Exigences TSR à mettre en place** : liste les exigences clés du référentiel TAPA TSR 2023 applicables à ce profil de trajet (verrouillage, télématique, formation chauffeur, parking sécurisé, pré-alerte, etc.) avec le numéro de section TSR si pertinent.
-
-Sois direct, opérationnel, adapté à un junior en sûreté transport. Réponds en français.`;
-
-    try {
-      const res  = await fetch("https://api.anthropic.com/v1/messages", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          model: "claude-sonnet-4-20250514",
-          max_tokens: 1200,
-          messages: [{ role: "user", content: prompt }]
-        })
-      });
-      const data = await res.json();
-      setAiResult(data.content.map(b => b.text || "").join("\n"));
-    } catch {
-      setAiResult("Erreur lors de la génération des préconisations.");
-    }
-    setLoading(false);
-  }
-
-  function reset() { setChecked({}); setValeur(null); setStep("form"); setAiResult(""); }
-
   const level = getLevel(score);
+  const tsrReco = getTSRLevel(score, valeur);
+
+  function reset() { setChecked({}); setValeur(null); setStep("form"); }
 
   if (step === "result") {
     const tsr = getTSRLevel(score, valeur);
+    const triggered = questions.filter(q => checked[q.id]);
+    const precos = precoGenerales[tsr.level] || [];
+
     return (
       <div style={{ fontFamily: "Inter,sans-serif", maxWidth: 720, margin: "0 auto", padding: "24px 16px" }}>
+
         <div style={{ background: level.bg, border: `2px solid ${level.color}`, borderRadius: 16, padding: 24, textAlign: "center", marginBottom: 16 }}>
           <div style={{ fontSize: 40 }}>{level.icon}</div>
           <div style={{ fontSize: 26, fontWeight: 800, color: level.color }}>{level.label}</div>
@@ -128,39 +107,44 @@ Sois direct, opérationnel, adapté à un junior en sûreté transport. Réponds
         <div style={{ background: "#f5f3ff", border: `2px solid ${tsr.color}`, borderRadius: 12, padding: "14px 20px", marginBottom: 16, display: "flex", alignItems: "center", gap: 12 }}>
           <span style={{ fontSize: 22 }}>{tsr.badge}</span>
           <div>
-            <div style={{ fontWeight: 800, color: tsr.color, fontSize: 16 }}>{tsr.level || tsr.label}</div>
+            <div style={{ fontWeight: 800, color: tsr.color, fontSize: 16 }}>{tsr.level}</div>
             <div style={{ fontSize: 13, color: "#6b7280" }}>{tsr.desc}</div>
           </div>
         </div>
 
-        <div style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 12, padding: 18, marginBottom: 16 }}>
-          <h3 style={{ margin: "0 0 10px", fontSize: 14, color: "#6b7280", textTransform: "uppercase", letterSpacing: 1 }}>Facteurs de risque identifiés</h3>
-          {questions.filter(q => checked[q.id]).length === 0 ? (
-            <p style={{ color: "#22c55e", margin: 0, fontSize: 14 }}>Aucun facteur de risque détecté.</p>
-          ) : (
-            <ul style={{ margin: 0, paddingLeft: 18, color: "#111827", lineHeight: 1.9, fontSize: 14 }}>
-              {questions.filter(q => checked[q.id]).map(q => <li key={q.id}>{q.label}</li>)}
-              {valeur?.points > 0 && <li>Valeur du transport : {valeur.label}</li>}
-            </ul>
-          )}
-        </div>
+        {triggered.length > 0 && (
+          <div style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 12, padding: 18, marginBottom: 16 }}>
+            <h3 style={{ margin: "0 0 12px", fontSize: 13, color: "#6b7280", textTransform: "uppercase", letterSpacing: 1 }}>Facteurs de risque identifiés</h3>
+            {triggered.map(q => (
+              <div key={q.id} style={{ marginBottom: 14, paddingBottom: 14, borderBottom: "1px solid #f1f5f9" }}>
+                <div style={{ fontWeight: 700, fontSize: 13.5, color: "#1e293b", marginBottom: 4 }}>⚠️ {q.label}</div>
+                <div style={{ fontSize: 13, color: "#475569", lineHeight: 1.6 }}>→ {q.precoTSR}</div>
+              </div>
+            ))}
+            {valeur?.points > 0 && (
+              <div style={{ fontWeight: 700, fontSize: 13.5, color: "#1e293b" }}>💰 Valeur du transport : {valeur.label}</div>
+            )}
+          </div>
+        )}
 
         <div style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 12, padding: 18, marginBottom: 20 }}>
-          <h3 style={{ margin: "0 0 10px", fontSize: 14, color: "#6b7280", textTransform: "uppercase", letterSpacing: 1 }}>Analyse & Préconisations TSR</h3>
-          {loading ? (
-            <div style={{ textAlign: "center", padding: 32, color: "#6b7280" }}>
-              <div style={{ fontSize: 30, marginBottom: 8 }}>⏳</div>Analyse en cours…
+          <h3 style={{ margin: "0 0 12px", fontSize: 13, color: "#6b7280", textTransform: "uppercase", letterSpacing: 1 }}>Exigences {tsr.level} à mettre en place</h3>
+          {precos.map((p, i) => (
+            <div key={i} style={{ display: "flex", gap: 10, marginBottom: 10, fontSize: 13.5, color: "#1e293b", lineHeight: 1.5 }}>
+              <span style={{ color: tsr.color, fontWeight: 700, flexShrink: 0 }}>✓</span>
+              <span>{p}</span>
             </div>
-          ) : (
-            <div style={{ lineHeight: 1.85, color: "#111827", fontSize: 14, whiteSpace: "pre-wrap" }}>
-              {renderMd(aiResult)}
-            </div>
-          )}
+          ))}
         </div>
 
         <button onClick={reset} style={{ width: "100%", padding: 14, background: "#1e293b", color: "#fff", border: "none", borderRadius: 10, fontSize: 16, fontWeight: 700, cursor: "pointer" }}>
           ← Nouveau trajet
         </button>
+
+        <div style={{ marginTop: 32, padding: "16px 0", borderTop: "1px solid #e5e7eb", textAlign: "center" }}>
+          <p style={{ margin: 0, fontSize: 12, color: "#9ca3af" }}>Outil conçu par <strong style={{ color: "#475569" }}>Lola CHAUDY</strong></p>
+          <p style={{ margin: "2px 0 0", fontSize: 12, color: "#9ca3af" }}>Consultante en sûreté de la supply chain · <a href="tel:0660987642" style={{ color: "#7c3aed", textDecoration: "none" }}>06 60 98 76 42</a></p>
+        </div>
       </div>
     );
   }
@@ -239,7 +223,7 @@ Sois direct, opérationnel, adapté à un junior en sûreté transport. Réponds
         </div>
       )}
 
-      <button onClick={handleSubmit} disabled={!valeur} style={{
+      <button onClick={() => setStep("result")} disabled={!valeur} style={{
         width: "100%", padding: 15, fontSize: 15, fontWeight: 700,
         background: valeur ? "#1e293b" : "#e5e7eb",
         color: valeur ? "#fff" : "#9ca3af",
@@ -247,6 +231,11 @@ Sois direct, opérationnel, adapté à un junior en sûreté transport. Réponds
       }}>
         Analyser le trajet →
       </button>
+
+      <div style={{ marginTop: 32, padding: "16px 0", borderTop: "1px solid #e5e7eb", textAlign: "center" }}>
+        <p style={{ margin: 0, fontSize: 12, color: "#9ca3af" }}>Outil conçu par <strong style={{ color: "#475569" }}>Lola CHAUDY</strong></p>
+        <p style={{ margin: "2px 0 0", fontSize: 12, color: "#9ca3af" }}>Consultante en sûreté de la supply chain · <a href="tel:0660987642" style={{ color: "#7c3aed", textDecoration: "none" }}>06 60 98 76 42</a></p>
+      </div>
     </div>
   );
 }
