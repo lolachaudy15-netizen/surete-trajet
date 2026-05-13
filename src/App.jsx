@@ -54,22 +54,22 @@ const precoGenerales = {
     "Activer le suivi GPS et tester la connexion avant départ",
   ],
   "TSR 3": [
-    "Mettre en place un système de suivi télématique actif avec alertes automatiques (TSR §9.14)",
-    "Utiliser un système de verrouillage certifié sur la remorque (TSR §9 Locking)",
+    "Mettre en place un système de suivi télématique actif avec alertes automatiques",
+    "Utiliser un système de verrouillage certifié sur la remorque",
     "Définir un protocole de check-in régulier avec le dispatcher (toutes les 2h minimum)",
-    "Former le chauffeur aux procédures de sûreté de base (TSR §9.20)",
+    "Former le chauffeur aux procédures de sûreté de base",
     "Établir une procédure d'urgence documentée et connue du chauffeur",
     "Valider l'itinéraire avec le responsable sûreté avant départ",
   ],
   "TSR 1": [
-    "Exiger une certification TAPA TSR 1 du transporteur (TSR §9 complet)",
-    "Mettre en place un suivi télématique en temps réel avec centre de surveillance 24h/24 (TSR §9.14)",
-    "Utiliser des scellés numérotés et vérifiés à chaque étape (TSR §9.30)",
-    "Stationner exclusivement sur des parkings certifiés TAPA PSR (TSR §9.5)",
-    "Vérifier les antécédents du chauffeur (TSR §9.20)",
+    "Exiger une certification TAPA TSR 1 du transporteur",
+    "Mettre en place un suivi télématique en temps réel avec centre de surveillance 24h/24",
+    "Utiliser des scellés numérotés et vérifiés à chaque étape",
+    "Stationner exclusivement sur des parkings certifiés TAPA PSR",
+    "Vérifier les antécédents du chauffeur",
     "Mettre en place une procédure de pré-alerte client avant départ et à l'arrivée",
     "Prévoir une escorte ou un convoi si le risque est jugé critique",
-    "Briefing sûreté obligatoire avant chaque mission (TSR §9.3)",
+    "Briefing sûreté obligatoire avant chaque mission",
   ],
 };
 
@@ -128,7 +128,7 @@ export default function App() {
         )}
 
         <div style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 12, padding: 18, marginBottom: 20 }}>
-          <h3 style={{ margin: "0 0 12px", fontSize: 13, color: "#6b7280", textTransform: "uppercase", letterSpacing: 1 }}>Exigences {tsr.level} à mettre en place</h3>
+          <h3 style={{ margin: "0 0 12px", fontSize: 13, color: "#6b7280", textTransform: "uppercase", letterSpacing: 1 }}>Préconisations</h3>
           {precos.map((p, i) => (
             <div key={i} style={{ display: "flex", gap: 10, marginBottom: 10, fontSize: 13.5, color: "#1e293b", lineHeight: 1.5 }}>
               <span style={{ color: tsr.color, fontWeight: 700, flexShrink: 0 }}>✓</span>
