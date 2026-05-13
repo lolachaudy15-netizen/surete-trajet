@@ -155,7 +155,7 @@ export default function App() {
         <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 4 }}>
           <span style={{ fontSize: 26 }}>🛡️</span>
           <h1 style={{ margin: 0, fontSize: 20, fontWeight: 800, color: "#1e293b" }}>Scoring Sûreté de Trajet</h1>
-          <span style={{ marginLeft: "auto", fontSize: 11, background: "#ede9fe", color: "#7c3aed", padding: "3px 10px", borderRadius: 99, fontWeight: 700 }}>TAPA TSR 2023</span>
+
         </div>
         <p style={{ margin: 0, color: "#6b7280", fontSize: 13 }}>Cochez tous les éléments applicables à votre trajet</p>
         <div style={{ marginTop: 8, background: "#e5e7eb", borderRadius: 99, height: 5 }}>
